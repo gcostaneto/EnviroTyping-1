@@ -89,3 +89,29 @@ hyb_by_mon_posthoc$group = as.factor(hyb_by_mon_posthoc$group)
 clus.colors = c("1"="#7570B3","2"="#1C9E77","3"="#D95F02","4"="#E72A8A","5"="#E6AB02","6"="#666666")
 group.colors = c("1"="#E69F00","2"="#57B4E9","3"="#019E73","4"="#F0E442")
 ```
+
+## Plotting the Results
+
+We ultimately would like to understand the fundamental differences between the post-hoc groups. We will show several of the more interesting results here. First, we will show cluster yields by their post-hoc groups. 
+
+```{r}
+png("../../working_with_plots/BanksPlots/Figures/ClusterYieldsbyGroup.png", width = 1280, height = 1080)
+l = list()
+for (i in 1:4){
+    tmp = hyb_by_mon_posthoc %>% filter(group == i)
+    p = ggplot(tmp,aes(clus, Yield)) + 
+        geom_bar(aes(fill = clus), width = .5, stat = "summary", fun.y = "mean") + 
+        scale_fill_manual(values=clus.colors) +
+        labs(title = paste("Average Yield by Cluster for Group",i,sep = " "), x = "Envirotyping Cluster", y = "Yield [bu/acre]") +
+        theme_bw() + 
+        theme(plot.title = element_text(hjust = 0.5)) + 
+        guides(fill=FALSE)
+    l[[i]] = p
+}
+grid.arrange(l[[1]],l[[2]],l[[3]],l[[4]])
+dev.off()
+```
+
+The above code produces:
+
+![Cluster Yield by Group](https://github.com/TACC/EnviroTyping/blob/master/sandbox/working_with_plots/Figures/ClusterYieldsbyGroup.png)
